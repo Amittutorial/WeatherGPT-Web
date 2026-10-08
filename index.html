@@ -1,0 +1,2573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Weather GPT — Weather Intelligence and Decision Engine with live weather, forecasts, AQI, maps, travel insights and AI weather assistance."
+    >
+
+    <meta
+        name="theme-color"
+        content="#07111f"
+    >
+
+    <title>Weather GPT | Weather Intelligence</title>
+
+    <!-- =========================
+         GOOGLE FONTS
+    ========================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- =========================
+         FONT AWESOME
+    ========================== -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- =========================
+         LEAFLET
+    ========================== -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <!-- =========================
+         MAIN CSS
+    ========================== -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         BACKGROUND
+    ====================================================== -->
+
+    <div class="background-layer">
+        <video
+            id="backgroundVideo"
+            autoplay
+            muted
+            loop
+            playsinline
+        >
+            <source src="video.mp4" type="video/mp4">
+        </video>
+
+        <div class="background-overlay"></div>
+    </div>
+
+
+    <!-- =====================================================
+         NAVBAR
+    ====================================================== -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <!-- Logo -->
+            <a href="#home" class="brand">
+
+                <div class="brand-icon">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                </div>
+
+                <div class="brand-text">
+                    <strong>Weather<span>GPT</span></strong>
+                    <small>WEATHER INTELLIGENCE</small>
+                </div>
+
+            </a>
+
+
+            <!-- Navigation -->
+            <nav class="nav-links">
+
+                <a href="#home" class="active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="#forecast">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Forecast</span>
+                </a>
+
+                <a href="#weather-map">
+                    <i class="fa-solid fa-map"></i>
+                    <span>Weather Map</span>
+                </a>
+
+                <a href="#travel">
+                    <i class="fa-solid fa-route"></i>
+                    <span>Travel</span>
+                </a>
+
+                <a href="#profession">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>Profession</span>
+                </a>
+
+                <a href="#farming">
+                    <i class="fa-solid fa-seedling"></i>
+                    <span>Farming</span>
+                </a>
+
+                <a href="#alerts">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Alerts</span>
+                </a>
+
+            </nav>
+
+
+            <!-- Navbar Actions -->
+            <div class="nav-actions">
+
+                <button
+                    class="theme-btn"
+                    id="themeToggle"
+                    onclick="toggleTheme()"
+                    aria-label="Toggle theme"
+                    title="Toggle Light / Dark Mode"
+                >
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <button
+                    class="location-btn"
+                    onclick="getLocation()"
+                    title="Use My Location"
+                >
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                    <span>Use My Location</span>
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main id="home">
+
+
+        <!-- =================================================
+             HERO
+        ================================================== -->
+
+        <section class="hero-section">
+
+            <div class="hero-container">
+
+                <!-- Hero Content -->
+                <div class="hero-content">
+
+                    <div class="hero-badge">
+                        <span class="live-dot"></span>
+                        LIVE WEATHER INTELLIGENCE
+                    </div>
+
+                    <h1>
+                        Don't just check
+                        <span>the weather.</span>
+                        <br>
+                        Decide better.
+                    </h1>
+
+                    <p class="hero-description">
+                        Weather GPT transforms live weather data into
+                        useful decisions for travel, outdoor activities,
+                        farming, work and everyday life.
+                    </p>
+
+
+                    <!-- Search -->
+                    <div class="search-wrapper">
+
+                        <div class="search-box">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                            <input
+                                type="text"
+                                id="cityInput"
+                                placeholder="Search city, village, college or location..."
+                                autocomplete="off"
+                                oninput="showLocationSuggestions()"
+                                onkeydown="handleSearchKey(event)"
+                            >
+
+                            <button
+                                class="search-btn"
+                                onclick="searchWeather()"
+                                aria-label="Search weather"
+                            >
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </div>
+
+                        <div
+                            class="location-results"
+                            id="locationResults"
+                        ></div>
+
+                    </div>
+
+
+                    <!-- Hero Mini Features -->
+                    <div class="hero-features">
+
+                        <div class="hero-feature">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                            <span>Live Data</span>
+                        </div>
+
+                        <div class="hero-feature">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Hyperlocal</span>
+                        </div>
+
+                        <div class="hero-feature">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Smart Insights</span>
+                        </div>
+
+                        <div class="hero-feature">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Smart Alerts</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Hero Visual -->
+                <div class="hero-visual">
+
+    <div class="hero-orbit orbit-one"></div>
+    <div class="hero-orbit orbit-two"></div>
+
+    <div class="hero-glow"></div>
+
+    <div class="hero-weather-symbol">
+        <i class="fa-solid fa-cloud-sun"></i>
+    </div>
+
+    <div class="hero-floating-card card-one">
+        <i class="fa-solid fa-temperature-half"></i>
+        <div>
+            <small>Temperature</small>
+            <strong id="heroTemperature">--°</strong>
+        </div>
+    </div>
+
+    <div class="hero-floating-card card-two">
+        <i class="fa-solid fa-droplet"></i>
+        <div>
+            <small>Rain Chance</small>
+            <strong id="heroRain">--%</strong>
+        </div>
+    </div>
+
+    <div class="hero-floating-card card-three">
+        <i class="fa-solid fa-wind"></i>
+        <div>
+            <small>Wind</small>
+            <strong id="heroWind">-- km/h</strong>
+        </div>
+    </div>
+
+</div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             CURRENT WEATHER
+        ================================================== -->
+
+        <section class="section weather-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            CURRENT CONDITIONS
+                        </span>
+
+                        <h2>
+                            Weather at a glance
+                        </h2>
+                    </div>
+
+                    <div class="live-status">
+                        <span></span>
+                        Live
+                    </div>
+
+                </div>
+
+
+                <div class="current-weather-grid">
+
+
+                    <!-- =========================
+                         LOCATION / INFO
+                    ========================== -->
+
+                    <div class="location-info-card glass-card">
+
+                        <div class="card-top">
+
+                            <div>
+                                <span class="mini-label">
+                                    CURRENT LOCATION
+                                </span>
+
+                                <h3 id="cityName">
+                                    Lucknow
+                                </h3>
+
+                                <p id="locationAddress">
+                                    Loading location...
+                                </p>
+                            </div>
+
+                            <div class="location-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="location-divider"></div>
+
+
+                        <div class="location-meta">
+
+                            <div>
+                                <span>Latitude</span>
+                                <strong id="latitudeValue">--</strong>
+                            </div>
+
+                            <div>
+                                <span>Longitude</span>
+                                <strong id="longitudeValue">--</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="exact-location">
+
+                            <div class="exact-location-icon">
+                                <i class="fa-solid fa-crosshairs"></i>
+                            </div>
+
+                            <div>
+                                <span>EXACT LOCATION</span>
+                                <strong id="exactLocationName">
+                                    Detecting...
+                                </strong>
+
+                                <p id="exactLocationAddress">
+                                    --
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================
+                         WEATHER CARD
+                    ========================== -->
+
+                    <div class="weather-main-card">
+
+                        <div class="weather-card-header">
+
+                            <div>
+                                <span class="mini-label">
+                                    LIVE WEATHER
+                                </span>
+
+                                <p id="condition">
+                                    Loading...
+                                </p>
+                            </div>
+
+                            <div class="weather-live-badge">
+                                <span></span>
+                                LIVE
+                            </div>
+
+                        </div>
+
+
+                        <div class="weather-main-content">
+
+                            <div class="weather-icon-wrap">
+
+                                <div
+                                    class="weather-icon"
+                                    id="weatherIcon"
+                                >
+                                    <i class="fa-solid fa-cloud-sun"></i>
+                                </div>
+
+                            </div>
+
+
+                            <div class="temperature-wrap">
+
+                                <div class="temperature">
+                                    <span id="temperature">--</span>
+                                    <sup>°C</sup>
+                                </div>
+
+                                <p>
+                                    Feels like
+                                    <strong id="feels">--°C</strong>
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="weather-metrics">
+
+                            <div class="weather-metric">
+
+                                <i class="fa-solid fa-droplet"></i>
+
+                                <div>
+                                    <span>Humidity</span>
+                                    <strong id="humidity">--%</strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="weather-metric">
+
+                                <i class="fa-solid fa-wind"></i>
+
+                                <div>
+                                    <span>Wind</span>
+                                    <strong id="wind">-- km/h</strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="weather-metric">
+
+                                <i class="fa-solid fa-cloud-rain"></i>
+
+                                <div>
+                                    <span>Rain</span>
+                                    <strong id="rain">--%</strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="weather-metric">
+
+                                <i class="fa-solid fa-eye"></i>
+
+                                <div>
+                                    <span>Visibility</span>
+                                    <strong id="visibility">-- km</strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WEATHER DECISION ENGINE
+        ================================================== -->
+
+        <section class="section decision-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            WEATHER DECISION ENGINE
+                        </span>
+
+                        <h2>
+                            What should you do now?
+                        </h2>
+
+                        <p>
+                            Weather GPT converts live conditions into
+                            practical activity scores.
+                        </p>
+                    </div>
+
+                    <div class="decision-badge">
+                        <i class="fa-solid fa-brain"></i>
+                        Smart Decision
+                    </div>
+
+                </div>
+
+
+                <div class="decision-grid">
+
+
+                    <div class="decision-main glass-card">
+
+                        <div class="decision-header">
+
+                            <div class="decision-icon">
+                                <i class="fa-solid fa-compass"></i>
+                            </div>
+
+                            <div>
+                                <span>RECOMMENDATION</span>
+                                <h3 id="scoreStatus">
+                                    Analysing weather...
+                                </h3>
+                            </div>
+
+                        </div>
+
+
+                        <div class="decision-score">
+
+                            <div class="score-ring">
+
+                                <div class="score-ring-inner">
+                                    <strong id="weatherScore">
+                                        --
+                                    </strong>
+
+                                    <span>/100</span>
+                                </div>
+
+                            </div>
+
+                            <div class="score-copy">
+
+                                <h4>
+                                    Overall Weather Score
+                                </h4>
+
+                                <p id="scoreDescription">
+                                    Weather intelligence is being calculated
+                                    from live conditions.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="activity-score-grid">
+
+                        <div class="activity-card">
+                            <i class="fa-solid fa-plane"></i>
+                            <span>Travel</span>
+                            <strong id="travelScore">--%</strong>
+                        </div>
+
+                        <div class="activity-card">
+                            <i class="fa-solid fa-person-running"></i>
+                            <span>Exercise</span>
+                            <strong id="exerciseScore">--%</strong>
+                        </div>
+
+                        <div class="activity-card">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Photography</span>
+                            <strong id="photoScore">--%</strong>
+                        </div>
+
+                        <div class="activity-card">
+                            <i class="fa-solid fa-person-walking"></i>
+                            <span>Outdoor Work</span>
+                            <strong id="outdoorScore">--%</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WEATHER STORY
+        ================================================== -->
+
+        <section class="section weather-story-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            WEATHER STORY
+                        </span>
+
+                        <h2>
+                            How your weather changes
+                        </h2>
+
+                        <p>
+                            Follow the day instead of checking isolated numbers.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="weather-timeline">
+
+                    <div class="timeline-item active">
+
+                        <div class="timeline-dot"></div>
+
+                        <div class="timeline-content">
+
+                            <span>NOW</span>
+
+                            <strong id="timelineMorning">
+                                --
+                            </strong>
+
+                            <p id="timelineMorningCondition">
+                                Loading...
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-line"></div>
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot"></div>
+
+                        <div class="timeline-content">
+
+                            <span>AFTERNOON</span>
+
+                            <strong id="timelineAfternoon">
+                                --
+                            </strong>
+
+                            <p id="timelineAfternoonCondition">
+                                --
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-line"></div>
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot"></div>
+
+                        <div class="timeline-content">
+
+                            <span>EVENING</span>
+
+                            <strong id="timelineEvening">
+                                --
+                            </strong>
+
+                            <p id="timelineEveningCondition">
+                                --
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline-line"></div>
+
+
+                    <div class="timeline-item">
+
+                        <div class="timeline-dot"></div>
+
+                        <div class="timeline-content">
+
+                            <span>NIGHT</span>
+
+                            <strong id="timelineNight">
+                                --
+                            </strong>
+
+                            <p id="timelineNightCondition">
+                                --
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WEATHER DETAILS
+        ================================================== -->
+
+        <section class="section details-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            WEATHER DETAILS
+                        </span>
+
+                        <h2>
+                            More than temperature
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="details-grid">
+
+                    <div class="detail-card">
+                        <i class="fa-solid fa-sun"></i>
+                        <span>Sunrise</span>
+                        <strong id="sunrise">--</strong>
+                    </div>
+
+                    <div class="detail-card">
+                        <i class="fa-solid fa-moon"></i>
+                        <span>Sunset</span>
+                        <strong id="sunset">--</strong>
+                    </div>
+
+                    <div class="detail-card">
+                        <i class="fa-solid fa-eye"></i>
+                        <span>Visibility</span>
+                        <strong id="visibilityDetail">--</strong>
+                    </div>
+
+                    <div class="detail-card">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <span>Pressure</span>
+                        <strong id="pressure">--</strong>
+                    </div>
+
+                    <div class="detail-card">
+                        <i class="fa-solid fa-sun"></i>
+                        <span>UV Index</span>
+                        <strong id="uvIndex">--</strong>
+                    </div>
+
+                    <div class="detail-card">
+                        <i class="fa-solid fa-cloud"></i>
+                        <span>Cloud Cover</span>
+                        <strong id="cloudCover">--</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             HOURLY FORECAST
+        ================================================== -->
+
+        <section
+            class="section forecast-section"
+            id="forecast"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            HOURLY FORECAST
+                        </span>
+
+                        <h2>
+                            Next few hours
+                        </h2>
+                    </div>
+
+                    <div class="forecast-live">
+                        <i class="fa-solid fa-clock"></i>
+                        Live Forecast
+                    </div>
+
+                </div>
+
+
+                <div class="hourly-grid">
+
+                    <article class="hour-card" id="hour1">
+                        <span class="hour-time">--</span>
+                        <i class="hour-icon fa-solid fa-cloud"></i>
+                        <strong class="hour-temp">--°</strong>
+                        <span class="hour-rain">--% rain</span>
+                    </article>
+
+                    <article class="hour-card" id="hour2">
+                        <span class="hour-time">--</span>
+                        <i class="hour-icon fa-solid fa-cloud"></i>
+                        <strong class="hour-temp">--°</strong>
+                        <span class="hour-rain">--% rain</span>
+                    </article>
+
+                    <article class="hour-card" id="hour3">
+                        <span class="hour-time">--</span>
+                        <i class="hour-icon fa-solid fa-cloud"></i>
+                        <strong class="hour-temp">--°</strong>
+                        <span class="hour-rain">--% rain</span>
+                    </article>
+
+                    <article class="hour-card" id="hour4">
+                        <span class="hour-time">--</span>
+                        <i class="hour-icon fa-solid fa-cloud"></i>
+                        <strong class="hour-temp">--°</strong>
+                        <span class="hour-rain">--% rain</span>
+                    </article>
+
+                    <article class="hour-card" id="hour5">
+                        <span class="hour-time">--</span>
+                        <i class="hour-icon fa-solid fa-cloud"></i>
+                        <strong class="hour-temp">--°</strong>
+                        <span class="hour-rain">--% rain</span>
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             10 DAY FORECAST
+        ================================================== -->
+
+        <section class="section ten-day-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            LONG RANGE
+                        </span>
+
+                        <h2>
+                            10-day forecast
+                        </h2>
+
+                        <p>
+                            Plan ahead with the upcoming weather trend.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="forecast-10-grid">
+
+                    <article class="day-card" id="day1">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day2">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day3">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day4">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day5">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day6">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day7">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day8">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day9">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                    <article class="day-card" id="day10">
+                        <span class="day-name">--</span>
+                        <i class="day-icon fa-solid fa-cloud"></i>
+                        <strong class="day-temp">--°</strong>
+                        <span class="day-condition">--</span>
+                        <span class="day-rain">--% rain</span>
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             AIR QUALITY
+        ================================================== -->
+
+        <section class="section aqi-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            AIR QUALITY
+                        </span>
+
+                        <h2>
+                            Breathe smarter
+                        </h2>
+                    </div>
+
+                    <div class="aqi-live">
+                        <span></span>
+                        Live AQI
+                    </div>
+
+                </div>
+
+
+                <div class="aqi-grid">
+
+                    <div class="aqi-main glass-card">
+
+                        <div class="aqi-header">
+
+                            <div>
+                                <span>US AQI</span>
+
+                                <strong id="aqiValue">
+                                    --
+                                </strong>
+                            </div>
+
+                            <div class="aqi-status" id="aqiStatus">
+                                Loading...
+                            </div>
+
+                        </div>
+
+                        <div class="aqi-scale">
+                            <div class="aqi-scale-fill"></div>
+                        </div>
+
+                        <p>
+                            Air quality information helps you decide
+                            when outdoor activity is more suitable.
+                        </p>
+
+                    </div>
+
+
+                    <div class="pollutant-grid">
+
+                        <div class="pollutant-card">
+                            <span>PM2.5</span>
+                            <strong id="pm25">--</strong>
+                        </div>
+
+                        <div class="pollutant-card">
+                            <span>PM10</span>
+                            <strong id="pm10">--</strong>
+                        </div>
+
+                        <div class="pollutant-card">
+                            <span>CO</span>
+                            <strong id="co">--</strong>
+                        </div>
+
+                        <div class="pollutant-card">
+                            <span>NO₂</span>
+                            <strong id="no2">--</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WEATHER MAP
+        ================================================== -->
+
+        <section
+            class="section map-section"
+            id="weather-map"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            LIVE WEATHER MAP
+                        </span>
+
+                        <h2>
+                            See your weather on the map
+                        </h2>
+
+                        <p id="mapStatus">
+                            Connecting to live location...
+                        </p>
+                    </div>
+
+                    <div class="map-status">
+                        <span></span>
+                        Live Location
+                    </div>
+
+                </div>
+
+
+                <div class="map-card">
+
+                    <div
+                        id="weatherLiveMap"
+                        class="weather-live-map"
+                    ></div>
+
+
+                    <div class="map-controls">
+
+                        <button
+                            onclick="zoomIn()"
+                            title="Zoom in"
+                        >
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+
+                        <button
+                            onclick="zoomOut()"
+                            title="Zoom out"
+                        >
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+
+                        <button
+                            onclick="resetZoom()"
+                            title="Reset map"
+                        >
+                            <i class="fa-solid fa-crosshairs"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PROFESSION MODE
+        ================================================== -->
+
+        <section
+            class="section profession-section"
+            id="profession"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            PROFESSION MODE
+                        </span>
+
+                        <h2>
+                            Weather for your work
+                        </h2>
+
+                        <p>
+                            Get weather-aware recommendations based
+                            on your activity.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="profession-layout">
+
+                    <div class="profession-options">
+
+                        <button
+                            class="profession-btn active"
+                            onclick="selectProfession('student', this)"
+                        >
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>Student</span>
+                        </button>
+
+                        <button
+                            class="profession-btn"
+                            onclick="selectProfession('developer', this)"
+                        >
+                            <i class="fa-solid fa-code"></i>
+                            <span>Developer</span>
+                        </button>
+
+                        <button
+                            class="profession-btn"
+                            onclick="selectProfession('driver', this)"
+                        >
+                            <i class="fa-solid fa-car"></i>
+                            <span>Driver</span>
+                        </button>
+
+                        <button
+                            class="profession-btn"
+                            onclick="selectProfession('farmer', this)"
+                        >
+                            <i class="fa-solid fa-tractor"></i>
+                            <span>Farmer</span>
+                        </button>
+
+                        <button
+                            class="profession-btn"
+                            onclick="selectProfession('worker', this)"
+                        >
+                            <i class="fa-solid fa-helmet-safety"></i>
+                            <span>Outdoor Worker</span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="profession-result glass-card">
+
+                        <div class="profession-result-icon">
+                            <i
+                                id="professionIcon"
+                                class="fa-solid fa-graduation-cap"
+                            ></i>
+                        </div>
+
+                        <div>
+
+                            <span>YOUR WEATHER ADVICE</span>
+
+                            <h3 id="professionTitle">
+                                Student Mode
+                            </h3>
+
+                            <p id="professionDescription">
+                                Weather recommendations for your
+                                daily college routine.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             TRAVEL MODE
+        ================================================== -->
+
+        <section
+            class="section travel-section"
+            id="travel"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            TRAVEL MODE
+                        </span>
+
+                        <h2>
+                            Check the journey before you go
+                        </h2>
+
+                        <p>
+                            Compare departure and destination weather.
+                        </p>
+                    </div>
+
+                    <div class="travel-icon">
+                        <i class="fa-solid fa-route"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="travel-card glass-card">
+
+                    <div class="travel-inputs">
+
+                        <div class="input-group">
+
+                            <label for="departureCity">
+                                <i class="fa-solid fa-location-dot"></i>
+                                Departure
+                            </label>
+
+                            <input
+                                type="text"
+                                id="departureCity"
+                                placeholder="Enter departure city"
+                            >
+
+                        </div>
+
+
+                        <div class="route-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label for="destinationCity">
+                                <i class="fa-solid fa-flag-checkered"></i>
+                                Destination
+                            </label>
+
+                            <input
+                                type="text"
+                                id="destinationCity"
+                                placeholder="Enter destination city"
+                            >
+
+                        </div>
+
+
+                        <button
+                            class="travel-check-btn"
+                            onclick="checkTravelWeather()"
+                        >
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Check Journey
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="travel-result"
+                        id="travelResult"
+                    >
+
+                        <div
+                            class="travel-route"
+                            id="travelRoute"
+                        >
+                            Enter two locations to compare travel conditions.
+                        </div>
+
+
+                        <div class="travel-stats">
+
+                            <div>
+                                <span>Temperature</span>
+                                <strong id="travelTemp">--</strong>
+                            </div>
+
+                            <div>
+                                <span>Rain</span>
+                                <strong id="travelRain">--</strong>
+                            </div>
+
+                            <div>
+                                <span>Wind</span>
+                                <strong id="travelWind">--</strong>
+                            </div>
+
+                            <div>
+                                <span>AQI</span>
+                                <strong id="travelAQI">--</strong>
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="travel-status"
+                            id="travelStatus"
+                        >
+                            --
+                        </div>
+
+
+                        <div
+                            class="travel-tip"
+                            id="travelTip"
+                        >
+                            --
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SMART ALERTS
+        ================================================== -->
+
+        <section
+            class="section alerts-section"
+            id="alerts"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            SMART ALERTS
+                        </span>
+
+                        <h2>
+                            Know before weather changes
+                        </h2>
+                    </div>
+
+                    <div class="alert-live">
+                        <span></span>
+                        Monitoring
+                    </div>
+
+                </div>
+
+
+                <div class="alert-card">
+
+                    <div class="alert-icon">
+                        <i
+                            id="alertIcon"
+                            class="fa-solid fa-cloud-sun"
+                        ></i>
+                    </div>
+
+
+                    <div class="alert-content">
+
+                        <span>WEATHER ALERT</span>
+
+                        <h3 id="alertTitle">
+                            Weather looks stable
+                        </h3>
+
+                        <p id="alertMessage">
+                            Weather alerts will appear here
+                            when important conditions are detected.
+                        </p>
+
+                    </div>
+
+
+                    <div class="alert-actions">
+
+                        <button
+                            onclick="speakCurrentAlert()"
+                            title="Read alert"
+                        >
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+
+                        <button
+                            onclick="stopVoiceAlert()"
+                            title="Stop voice"
+                        >
+                            <i class="fa-solid fa-stop"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WEATHER COMPARISON
+        ================================================== -->
+
+        <section class="section comparison-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            WEATHER COMPARISON
+                        </span>
+
+                        <h2>
+                            Which place is better?
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="comparison-card glass-card">
+
+                    <div class="comparison-inputs">
+
+                        <input
+                            type="text"
+                            id="compareLocation1"
+                            placeholder="First location"
+                        >
+
+                        <div class="comparison-vs">
+                            VS
+                        </div>
+
+                        <input
+                            type="text"
+                            id="compareLocation2"
+                            placeholder="Second location"
+                        >
+
+                        <button onclick="compareWeather()">
+                            Compare
+                        </button>
+
+                    </div>
+
+
+                    <div class="comparison-results">
+
+                        <div class="comparison-location">
+
+                            <span id="compareCondition1">
+                                --
+                            </span>
+
+                            <strong id="compareTemp1">
+                                --°
+                            </strong>
+
+                        </div>
+
+
+                        <div class="comparison-divider">
+                            VS
+                        </div>
+
+
+                        <div class="comparison-location">
+
+                            <span id="compareCondition2">
+                                --
+                            </span>
+
+                            <strong id="compareTemp2">
+                                --°
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="comparison-result"
+                        id="comparisonResult"
+                    >
+                        Enter two locations to compare.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FARMING MODE
+        ================================================== -->
+
+        <section
+            class="section farming-section"
+            id="farming"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            SMART FARMING
+                        </span>
+
+                        <h2>
+                            Weather insights for agriculture
+                        </h2>
+
+                        <p>
+                            Practical weather signals for farming decisions.
+                        </p>
+                    </div>
+
+                    <div class="farming-symbol">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="farming-grid">
+
+                    <div class="farm-card">
+
+                        <i class="fa-solid fa-leaf"></i>
+
+                        <span>
+                            CROP CONDITION
+                        </span>
+
+                        <strong id="cropCondition">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="farm-card">
+
+                        <i class="fa-solid fa-droplet"></i>
+
+                        <span>
+                            IRRIGATION
+                        </span>
+
+                        <strong id="irrigationAdvice">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="farm-card">
+
+                        <i class="fa-solid fa-cloud-rain"></i>
+
+                        <span>
+                            RAIN ADVICE
+                        </span>
+
+                        <strong id="farmingRainAdvice">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="farm-card">
+
+                        <i class="fa-solid fa-temperature-half"></i>
+
+                        <span>
+                            TEMPERATURE RISK
+                        </span>
+
+                        <strong id="temperatureRisk">
+                            --
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             DAILY INSIGHT
+        ================================================== -->
+
+        <section class="section insight-section">
+
+            <div class="section-container">
+
+                <div class="insight-card">
+
+                    <div class="insight-icon">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+
+                    <div class="insight-content">
+
+                        <span>
+                            WEATHER INTELLIGENCE
+                        </span>
+
+                        <h3 id="dailyInsight">
+                            Analysing today's weather...
+                        </h3>
+
+                        <div class="insight-metrics">
+
+                            <div>
+                                <span>Temperature</span>
+                                <strong id="insightTemp">--</strong>
+                            </div>
+
+                            <div>
+                                <span>Rain</span>
+                                <strong id="insightRain">--</strong>
+                            </div>
+
+                            <div>
+                                <span>Wind</span>
+                                <strong id="insightWind">--</strong>
+                            </div>
+
+                            <div>
+                                <span>AQI</span>
+                                <strong id="insightAQI">--</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             OUTDOOR PLANNER
+        ================================================== -->
+
+        <section class="section outdoor-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            OUTDOOR PLANNER
+                        </span>
+
+                        <h2>
+                            Best time to go outside
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="outdoor-card glass-card">
+
+                    <div class="outdoor-time">
+
+                        <i class="fa-solid fa-clock"></i>
+
+                        <div>
+                            <span>BEST WINDOW</span>
+
+                            <strong id="outdoorTime">
+                                Analysing...
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <p id="outdoorMessage">
+                        Weather conditions are being analysed
+                        to find a suitable outdoor window.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PROFESSIONAL ADVICE
+        ================================================== -->
+
+        <section class="section professional-advice-section">
+
+            <div class="section-container">
+
+                <div class="professional-advice-card">
+
+                    <div class="professional-advice-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            PROFESSIONAL WEATHER ADVICE
+                        </span>
+
+                        <h3 id="professionalAdviceTitle">
+                            Weather-aware planning
+                        </h3>
+
+                        <p id="professionalAdvice">
+                            Weather intelligence will generate
+                            practical advice for your selected context.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             EMERGENCY WEATHER
+        ================================================== -->
+
+        <section class="section emergency-section">
+
+            <div class="section-container">
+
+                <div class="emergency-card">
+
+                    <div class="emergency-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+
+                    <div>
+
+                        <span>
+                            WEATHER SAFETY
+                        </span>
+
+                        <h3 id="emergencyTitle">
+                            No major weather risk detected
+                        </h3>
+
+                        <p id="emergencyMessage">
+                            Important weather conditions will
+                            be highlighted here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SAVED LOCATIONS
+        ================================================== -->
+
+        <section class="section saved-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            YOUR PLACES
+                        </span>
+
+                        <h2>
+                            Recent locations
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="saved-location-grid"
+                    id="savedLocationGrid"
+                >
+
+                    <div class="empty-saved">
+                        <i class="fa-solid fa-bookmark"></i>
+                        <span>Your searched locations will appear here.</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             POPULAR LOCATIONS
+        ================================================== -->
+
+        <section class="section popular-section">
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="section-label">
+                            EXPLORE
+                        </span>
+
+                        <h2>
+                            Popular locations
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div class="popular-grid">
+
+                    <button onclick="selectCity('Lucknow')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Lucknow
+                    </button>
+
+                    <button onclick="selectCity('Delhi')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Delhi
+                    </button>
+
+                    <button onclick="selectCity('Mumbai')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Mumbai
+                    </button>
+
+                    <button onclick="selectCity('Bengaluru')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Bengaluru
+                    </button>
+
+                    <button onclick="selectCity('Kolkata')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Kolkata
+                    </button>
+
+                    <button onclick="selectCity('Chennai')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Chennai
+                    </button>
+
+                    <button onclick="selectCity('Hyderabad')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Hyderabad
+                    </button>
+
+                    <button onclick="selectCity('Pune')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Pune
+                    </button>
+
+                    <button onclick="selectCity('Jaipur')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Jaipur
+                    </button>
+
+                    <button onclick="selectCity('Ahmedabad')">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Ahmedabad
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             WHY WEATHER GPT
+        ================================================== -->
+
+        <section class="section why-section">
+
+            <div class="section-container">
+
+                <div class="section-heading center-heading">
+
+                    <span class="section-label">
+                        WHY WEATHER GPT?
+                    </span>
+
+                    <h2>
+                        Not just weather. Weather intelligence.
+                    </h2>
+
+                    <p>
+                        Raw weather numbers become useful decisions.
+                    </p>
+
+                </div>
+
+
+                <div class="why-grid">
+
+                    <div class="why-card">
+
+                        <div class="why-number">
+                            01
+                        </div>
+
+                        <i class="fa-solid fa-location-crosshairs"></i>
+
+                        <h3>
+                            Hyperlocal
+                        </h3>
+
+                        <p>
+                            Search cities, villages and specific
+                            locations using geographic data.
+                        </p>
+
+                    </div>
+
+
+                    <div class="why-card">
+
+                        <div class="why-number">
+                            02
+                        </div>
+
+                        <i class="fa-solid fa-brain"></i>
+
+                        <h3>
+                            Decision Intelligence
+                        </h3>
+
+                        <p>
+                            Weather conditions are converted into
+                            useful activity recommendations.
+                        </p>
+
+                    </div>
+
+
+                    <div class="why-card">
+
+                        <div class="why-number">
+                            03
+                        </div>
+
+                        <i class="fa-solid fa-route"></i>
+
+                        <h3>
+                            Travel Intelligence
+                        </h3>
+
+                        <p>
+                            Compare destination conditions before
+                            planning your journey.
+                        </p>
+
+                    </div>
+
+
+                    <div class="why-card">
+
+                        <div class="why-number">
+                            04
+                        </div>
+
+                        <i class="fa-solid fa-bell"></i>
+
+                        <h3>
+                            Smart Alerts
+                        </h3>
+
+                        <p>
+                            Important changes and weather risks
+                            are highlighted clearly.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             CREATOR
+        ================================================== -->
+
+        <section class="section creator-section">
+
+            <div class="section-container">
+
+                <div class="creator-card">
+
+                    <div class="creator-avatar">
+                        AV
+                    </div>
+
+
+                    <div class="creator-content">
+
+                        <span>
+                            BUILT WITH CODE & CURIOSITY
+                        </span>
+
+                        <h2>
+                            Meet the creator
+                        </h2>
+
+                        <h3>
+                            Amit Verma
+                        </h3>
+
+                        <p>
+                            Full-Stack Web Developer
+                        </p>
+
+
+                        <div class="contact-detail">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            <div>
+                                <span>Email</span>
+
+                                <a href="mailto:amitpatel42203@gmail.com">
+                                    amitpatel42203@gmail.com
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                        <div class="creator-links">
+
+                            <a
+                                href="https://github.com/Amittutorial"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <i class="fa-brands fa-github"></i>
+                                GitHub
+                            </a>
+
+                            <a
+                                href="https://www.linkedin.com/in/amit-verma-b529992ab/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <i class="fa-brands fa-linkedin"></i>
+                                LinkedIn
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FLOATING AI WEATHER ASSISTANT
+    ====================================================== -->
+
+    <button
+        class="ai-float-btn"
+        id="aiFloatBtn"
+        onclick="toggleAIChat()"
+        aria-label="Open Weather AI"
+        title="Weather AI"
+    >
+        <i class="fa-solid fa-sparkles"></i>
+
+        <span class="ai-pulse"></span>
+    </button>
+
+
+    <!-- =====================================================
+         AI CHAT WINDOW
+    ====================================================== -->
+
+    <aside
+        class="ai-chat-window"
+        id="aiChatWindow"
+        aria-hidden="true"
+    >
+
+        <div class="ai-chat-header">
+
+            <div class="ai-chat-brand">
+
+                <div class="ai-chat-icon">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                </div>
+
+                <div>
+                    <strong>Weather AI</strong>
+                    <span>
+                        Weather-aware assistant
+                    </span>
+                </div>
+
+            </div>
+
+
+            <button
+                class="ai-close-btn"
+                onclick="closeAIChat()"
+                aria-label="Close AI assistant"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="ai-chat-body">
+
+            <div class="ai-welcome">
+
+                <div class="ai-message-avatar">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+
+                <div class="ai-message">
+
+                    <span>
+                        Weather AI
+                    </span>
+
+                    <p>
+                        Ask me about the current weather,
+                        rain, travel, outdoor activities or
+                        today's conditions.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Quick Questions -->
+
+            <div class="quick-questions">
+
+                <button
+                    id="rain"
+                    onclick="askAI('Will it rain today?')"
+                >
+                    <i class="fa-solid fa-cloud-rain"></i>
+                    Will it rain?
+                </button>
+
+                <button
+                    id="umbrella"
+                    onclick="askAI('Do I need an umbrella?')"
+                >
+                    <i class="fa-solid fa-umbrella"></i>
+                    Need umbrella?
+                </button>
+
+                <button
+                    id="travel"
+                    onclick="askAI('Is it good for travel?')"
+                >
+                    <i class="fa-solid fa-route"></i>
+                    Good for travel?
+                </button>
+
+                <button
+                    id="exercise"
+                    onclick="askAI('Is it good for exercise?')"
+                >
+                    <i class="fa-solid fa-person-running"></i>
+                    Exercise?
+                </button>
+
+            </div>
+
+
+            <!-- AI Answer -->
+
+            <div
+                class="ai-answer"
+                id="answer"
+            >
+                <span class="ai-answer-label">
+                    WEATHER AI
+                </span>
+
+                <p>
+                    Select a quick question or ask your own question.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- AI Input -->
+
+        <div class="ai-chat-input">
+
+            <input
+                type="text"
+                id="question"
+                placeholder="Ask about the weather..."
+                onkeydown="handleAIKey(event)"
+                autocomplete="off"
+            >
+
+            <button
+                onclick="askAI()"
+                aria-label="Send question"
+            >
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <div class="footer-brand">
+
+                <div class="brand">
+
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-cloud-sun"></i>
+                    </div>
+
+                    <div class="brand-text">
+                        <strong>
+                            Weather<span>GPT</span>
+                        </strong>
+
+                        <small>
+                            WEATHER INTELLIGENCE
+                        </small>
+                    </div>
+
+                </div>
+
+                <p>
+                    Don't just check the weather.
+                    Decide better.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <div>
+                    <span>PRODUCT</span>
+
+                    <a href="#forecast">
+                        Forecast
+                    </a>
+
+                    <a href="#weather-map">
+                        Weather Map
+                    </a>
+
+                    <a href="#travel">
+                        Travel Mode
+                    </a>
+
+                    <a href="#alerts">
+                        Smart Alerts
+                    </a>
+                </div>
+
+
+                <div>
+                    <span>INTELLIGENCE</span>
+
+                    <a href="#profession">
+                        Profession
+                    </a>
+
+                    <a href="#farming">
+                        Farming
+                    </a>
+
+                    <a href="#home">
+                        Weather Score
+                    </a>
+
+                    <a href="#home">
+                        Weather AI
+                    </a>
+                </div>
+
+
+                <div>
+                    <span>CREATOR</span>
+
+                    <a
+                        href="https://github.com/Amittutorial"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        GitHub
+                    </a>
+
+                    <a
+                        href="https://www.linkedin.com/in/amit-verma-b529992ab/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        LinkedIn
+                    </a>
+
+                    <a href="mailto:amitpatel42203@gmail.com">
+                        Contact
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Weather GPT. Built by Amit Verma.
+            </p>
+
+            <span>
+                WEATHER INTELLIGENCE & DECISION ENGINE
+            </span>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         LEAFLET JS
+    ====================================================== -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    ></script>
+
+
+    <!-- =====================================================
+         MAIN JAVASCRIPT
+    ====================================================== -->
+
+    <script src="script.js"></script>
+
+</body>
+</html>
